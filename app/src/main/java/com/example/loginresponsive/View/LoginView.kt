@@ -14,6 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.loginresponsive.R
+import com.example.loginresponsive.Routes
 
 @Composable
 fun LoginView(navController: NavHostController) {
@@ -58,6 +60,16 @@ fun LoginView(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(48.dp))
                 Button(onClick = { }) {
                     Text(text = "Login")
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center) {
+                    Text(text = "¿No tienes cuenta?")
+                    TextButton(onClick = { navController.navigate(Routes.SignUp.route) }) {
+                        Text(text = "Registrate")
+                    }
                 }
             }
         }
