@@ -62,12 +62,18 @@ El código fuente se encuentra bajo el paquete `com.example.loginresponsive`:
 ## Capturas
 Login default:
 <img width="392" height="880" alt="image" src="https://github.com/user-attachments/assets/61785769-f016-4dd2-8d78-b73717fd8fe3" />
+<hr>
 Login landscape:
 <img width="954" height="891" alt="image" src="https://github.com/user-attachments/assets/0ae92348-a0a8-4647-bd08-9b4b66d5078c" />
+<hr>
+
 Register default:
 <img width="424" height="885" alt="image" src="https://github.com/user-attachments/assets/9081d678-900c-4deb-9cee-2d3e3530c341" />
+<hr>
+
 Register landscape:
 <img width="1919" height="989" alt="image" src="https://github.com/user-attachments/assets/e1cb639a-1da4-436c-b269-aea0bf63df87" />
+
 
 
 
