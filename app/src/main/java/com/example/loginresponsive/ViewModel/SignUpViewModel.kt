@@ -53,4 +53,16 @@ class SignUpViewModel : ViewModel() {
         return email.isNotBlank() && emailRegex.matches(email.trim())
     }
 
+    fun validarFecha(fecha: String): String? {
+        val fechaRegex = Regex("^\\d{2}/\\d{2}/\\d{4}$")
+        if (fecha.isBlank()) return "Data obligatòria."
+        if (!fechaRegex.matches(fecha)) return "Format (DD/MM/AAAA)."
+        val partes = fecha.split("/")
+        val dia = partes[0].toIntOrNull() ?: return "Error"
+        val mes = partes[1].toIntOrNull() ?: return "Error"
+        if (dia !in 1..31 || mes !in 1..12) return "Data invàlida."
+        return null
+    }
+
+
 }
