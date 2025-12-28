@@ -64,5 +64,10 @@ class SignUpViewModel : ViewModel() {
         return null
     }
 
-
+    fun validarTelefono(telefon: String): String? {
+        if (telefon.isBlank()) return "Telèfon obligatori."
+        if (!telefon.all { it.isDigit() }) return "Només números."
+        if (telefon.length < 9) return "Mínim 9 dígits."
+        return null
+    }
 }
