@@ -10,4 +10,3 @@ data class SignUpUiState(
     val confirmPassword: String = "",
     val termesAcceptats: Boolean = false,
 )
-
