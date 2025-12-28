@@ -39,15 +39,9 @@ fun SignUpView(
     val uiState by signUpViewModel.uiState.observeAsState(SignUpUiState())
 
     when (windowSize) {
-        WindowWidthSizeClass.Compact -> {
-            SignUpCompact(navController, signUpViewModel, uiState)
-        }
-        WindowWidthSizeClass.Medium -> {
-            SignUpMedium(navController, signUpViewModel, uiState)
-        }
-        WindowWidthSizeClass.Expanded -> {
-            SignUpExpanded(navController, signUpViewModel, uiState)
-        }
+        WindowWidthSizeClass.Compact -> SignUpCompact(navController, signUpViewModel, uiState)
+        WindowWidthSizeClass.Medium -> SignUpMedium(navController, signUpViewModel, uiState)
+        WindowWidthSizeClass.Expanded -> SignUpExpanded(navController, signUpViewModel, uiState)
         else -> SignUpCompact(navController, signUpViewModel, uiState)
     }
 }
@@ -63,25 +57,23 @@ fun SignUpCompact(
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (!isLandscape) {
-            BannerSuperior(
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.15f))
+            BannerInstitut(
+                Modifier.fillMaxWidth().fillMaxHeight(0.15f)
+            )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         Card(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
+                .fillMaxWidth(0.95f)
                 .weight(1f)
-                .padding(bottom = 16.dp)
+                .padding(bottom = 10.dp)
         ) {
-            ContenidoFormulario(navController, viewModel, uiState)
+            FormularioContenido(navController, viewModel, uiState)
         }
     }
 }
@@ -96,15 +88,15 @@ fun SignUpMedium(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        BannerSuperior(Modifier.fillMaxWidth().height(100.dp))
-        Spacer(modifier = Modifier.height(24.dp))
+        BannerInstitut(Modifier.fillMaxWidth().height(100.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Card(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .fillMaxHeight(0.9f)
         ) {
-            ContenidoFormulario(navController, viewModel, uiState)
+            FormularioContenido(navController, viewModel, uiState)
         }
     }
 }
@@ -120,7 +112,7 @@ fun SignUpExpanded(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxHeight()
-                .background(color = Color.Blue),
+                .background(Color.Blue),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -130,10 +122,11 @@ fun SignUpExpanded(
                 tint = Color.White,
                 modifier = Modifier.size(100.dp)
             )
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Gimnasio App",
+                text = "Institut Tecnològic",
                 color = Color.White,
-                style = MaterialTheme.typography.headlineLarge,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -147,17 +140,17 @@ fun SignUpExpanded(
         ) {
             Card(
                 modifier = Modifier
-                    .width(400.dp)
+                    .width(450.dp)
                     .fillMaxHeight(0.9f)
             ) {
-                ContenidoFormulario(navController, viewModel, uiState)
+                FormularioContenido(navController, viewModel, uiState)
             }
         }
     }
 }
 
 @Composable
-fun BannerSuperior(modifier: Modifier) {
+fun BannerInstitut(modifier: Modifier) {
     Row(
         modifier = modifier.background(color = Color.Blue),
         verticalAlignment = Alignment.CenterVertically,
@@ -167,46 +160,48 @@ fun BannerSuperior(modifier: Modifier) {
             painter = painterResource(R.drawable.person),
             contentDescription = "Logo",
             tint = Color.White,
-            modifier = Modifier.size(48.dp)
+            modifier = Modifier.size(40.dp)
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(12.dp))
         Text(
-            text = "Gimnasio App",
+            text = "Institut Tecnològic",
             color = Color.White,
-            fontSize = 24.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold
         )
     }
 }
 
 @Composable
-fun ContenidoFormulario(
+fun FormularioContenido(
     navController: NavHostController,
-    signUpViewModel: SignUpViewModel,
+    viewModel: SignUpViewModel,
     uiState: SignUpUiState
 ) {
     val context = LocalContext.current
 
-    val isEmailValid = uiState.email.contains("@")
-    val isPhoneValid = uiState.telefon.all { it.isDigit() } && uiState.telefon.isNotEmpty()
-    val isPassMatch = uiState.password == uiState.confirmPassword && uiState.password.isNotEmpty()
-    val isFormValid = isEmailValid && isPhoneValid && isPassMatch && uiState.termesAcceptats && uiState.nomSencer.isNotEmpty()
+    val emailValido = uiState.email.contains("@")
+    val telfValido = uiState.telefon.all { it.isDigit() } && uiState.telefon.length >= 9
+    val passCoinciden = uiState.password.isNotEmpty() && uiState.password == uiState.confirmPassword
+    val camposLlenos = uiState.nomSencer.isNotEmpty() && uiState.nomUsuari.isNotEmpty()
+
+    val formOk = emailValido && telfValido && passCoinciden && camposLlenos && uiState.termesAcceptats
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(20.dp)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Sign Up", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Alta d'Usuari", fontSize = 24.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = uiState.nomSencer,
-            onValueChange = { signUpViewModel.onNomSencerChange(it) },
-            label = { Text(text = "Nom Sencer") },
-            leadingIcon = { Icon(painterResource(R.drawable.person), contentDescription = "Nom Sencer") },
+            onValueChange = { viewModel.onNomSencerChange(it) },
+            label = { Text("Nom complet") },
+            leadingIcon = { Icon(painterResource(R.drawable.person), null) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -214,44 +209,43 @@ fun ContenidoFormulario(
 
         OutlinedTextField(
             value = uiState.dataNaixement,
-            onValueChange = { signUpViewModel.onDataNaixementChange(it) },
-            label = { Text(text = "Data naixement (DD/MM/AAAA)") },
-            leadingIcon = { Icon(painterResource(R.drawable.calendar), contentDescription = "Data Naixement") },
+            onValueChange = { viewModel.onDataNaixementChange(it) },
+            label = { Text("Data naixement (DD/MM/AAAA)") },
+            leadingIcon = { Icon(painterResource(R.drawable.calendar), null) },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = uiState.email,
-            onValueChange = { signUpViewModel.onEmailChange(it) },
-            label = { Text(text = "Email") },
-            leadingIcon = { Icon(painterResource(R.drawable.mail), contentDescription = "Email") },
+            onValueChange = { viewModel.onEmailChange(it) },
+            label = { Text("Email") },
+            leadingIcon = { Icon(painterResource(R.drawable.mail), null) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            isError = uiState.email.isNotEmpty() && !isEmailValid
+            isError = uiState.email.isNotEmpty() && !emailValido
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = uiState.telefon,
-            onValueChange = { signUpViewModel.onTelefonChange(it) },
-            label = { Text(text = "Telèfon") },
-            leadingIcon = { Icon(painterResource(R.drawable.phone), contentDescription = "Telèfon") },
+            onValueChange = { viewModel.onTelefonChange(it) },
+            label = { Text("Telèfon") },
+            leadingIcon = { Icon(painterResource(R.drawable.phone), null) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            isError = uiState.telefon.isNotEmpty() && !isPhoneValid
+            isError = uiState.telefon.isNotEmpty() && !telfValido
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = uiState.nomUsuari,
-            onValueChange = { signUpViewModel.onNomUsuariChange(it) },
-            label = { Text(text = "Nom d'usuari") },
-            leadingIcon = { Icon(painterResource(R.drawable.face), contentDescription = "Nom d'usuari") },
+            onValueChange = { viewModel.onNomUsuariChange(it) },
+            label = { Text("Nom d'usuari") },
+            leadingIcon = { Icon(painterResource(R.drawable.face), null) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -259,9 +253,9 @@ fun ContenidoFormulario(
 
         OutlinedTextField(
             value = uiState.password,
-            onValueChange = { signUpViewModel.onPasswordChange(it) },
-            label = { Text(text = "Password") },
-            leadingIcon = { Icon(painterResource(R.drawable.pass), contentDescription = "Password") },
+            onValueChange = { viewModel.onPasswordChange(it) },
+            label = { Text("Password") },
+            leadingIcon = { Icon(painterResource(R.drawable.pass), null) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
@@ -271,14 +265,13 @@ fun ContenidoFormulario(
 
         OutlinedTextField(
             value = uiState.confirmPassword,
-            onValueChange = { signUpViewModel.onConfirmPasswordChange(it) },
-            label = { Text(text = "Confirmar Password") },
-            leadingIcon = { Icon(painterResource(R.drawable.pass), contentDescription = "Password") },
+            onValueChange = { viewModel.onConfirmPasswordChange(it) },
+            label = { Text("Confirmar Password") },
+            leadingIcon = { Icon(painterResource(R.drawable.pass), null) },
             visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             singleLine = true,
             modifier = Modifier.fillMaxWidth(),
-            isError = uiState.confirmPassword.isNotEmpty() && !isPassMatch
+            isError = uiState.confirmPassword.isNotEmpty() && !passCoinciden
         )
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -288,21 +281,22 @@ fun ContenidoFormulario(
         ) {
             Checkbox(
                 checked = uiState.termesAcceptats,
-                onCheckedChange = { signUpViewModel.onTermesAcceptatsChange(it) }
+                onCheckedChange = { viewModel.onTermesAcceptatsChange(it) }
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Accepto els termes i condicions del servei.")
+            Text("Accepto els termes i condicions.")
         }
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
-                Toast.makeText(context, "Compte creat!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Dades enviades correctament", Toast.LENGTH_SHORT).show()
                 navController.navigate(Routes.Login.route)
             },
-            enabled = isFormValid
+            enabled = formOk,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Sign Up")
+            Text("Registrar")
         }
     }
 }
